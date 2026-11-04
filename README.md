@@ -68,6 +68,10 @@ scores = model.predict(windows)
 print(windows[["chromosome", "window"]].join(scores))
 ```
 
+## Simulation and training examples
+
+The examples directory includes the Oceanian and East Asian simulation loops, metadata-aware training statistics, and the two-stage model-training script. Its guide describes the required mutation-fit inputs, editable paths, array jobs, preprocessing, and generated artifacts. [Full workflow examples](examples/README.md)
+
 ## Reproducibility
 
 The four Keras archives retain their original weights. The numeric scaler files preserve the fitted scikit-learn means and scales without requiring a pickle at runtime. The three cohort scripts shared the same statistic functions. The packaged extractor uses those functions with the original 50-kb windows, 10-kb subwindows and 5-kb occupancy bins.
