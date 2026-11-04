@@ -2,24 +2,34 @@
 
 **Deep ancestry Estimation through Efficient Proxies** scores 50-kb genomic windows for evidence of Denisovan-mediated superarchaic introgression. Select the Oceanian model for the Oceanian analysis or the East Asian model for the Tibetan and Han analyses. A positive call identifies a candidate window for follow-up. [McAllister, Zöllner & Zhang (2026)](https://doi.org/10.64898/2026.06.25.734355)
 
-## Run the example
+## Install from GitHub and run both models
 
-From the repository root, install into a Python 3.10–3.12 environment. The model files, input schema and fitted scalers are included.
+Use a Python 3.10–3.12 environment with Git installed. The package includes all four trained models, the input schema and the fitted scalers. Run the following in a working directory of your choice.
 
 ```sh
-python -m pip install .
-deep predict --population oceanian examples/toy_features.csv scores.csv
+python -m pip install "git+https://github.com/noelmcp/DEEP.git"
+curl -fL https://raw.githubusercontent.com/noelmcp/DEEP/main/examples/toy_features.csv -o toy_features.csv
+deep predict --population oceanian toy_features.csv oceanian_scores.csv
+deep predict --population east-asian toy_features.csv east_asian_scores.csv
 ```
 
-Open `scores.csv` to see one row per window. The input columns are preserved. `predicted_probs` is the classifier's sigmoid score and `pred` is 1 when the score strictly exceeds the population cutoff. Each score describes the whole window. It does not estimate an individual's fraction of superarchaic ancestry.
+Each output CSV preserves the input columns and adds the classifier's sigmoid score (`predicted_probs`) and its binary call (`pred`). A call is 1 when the score strictly exceeds the population cutoff. The synthetic example gives these scores rounded to six decimal places.
+
+| Chromosome 1 window | Oceanian score | East Asian score |
+| --- | ---: | ---: |
+| `1_50000` | 0.895511 | 0.882294 |
+| `50001_100000` | 0.972854 | 0.944584 |
+
+Both models return `pred = 0` for both windows. If you already cloned the repository, you can install with `python -m pip install .` and use `examples/toy_features.csv` as the input.
 
 ## Start from a prepared VCF
 
 On Linux, install the VCF reader and try the included synthetic panel. It contains seven artificial diploid humans and one artificial Denisovan. Two windows have segregating human sites and produce output. A third contains only Denisovan variation and is skipped.
 
 ```sh
-python -m pip install ".[vcf]"
-deep features examples/toy.vcf features.csv
+python -m pip install "deep-introgression[vcf] @ git+https://github.com/noelmcp/DEEP.git"
+curl -fL https://raw.githubusercontent.com/noelmcp/DEEP/main/examples/toy.vcf -o toy.vcf
+deep features toy.vcf features.csv
 deep predict --population east-asian features.csv scores.csv
 ```
 
@@ -37,13 +47,13 @@ Two inputs, `human_singletons` and `human_high_freq_sites`, were absent in the e
 
 | Population option | Empirical checkpoint (default) | Empirical cutoff | Fine-tuned checkpoint |
 | --- | --- | ---: | --- |
-| `oceanian` | `pretrain_test.keras` | 0.976012647 | `test.keras` |
-| `east-asian` | `pretrain_tibetan_test.keras` | 0.973326921 | `tibetan_test.keras` |
+| `oceanian` | `oceanian-empirical.keras` | 0.976012647 | `oceanian-fine-tuned.keras` |
+| `east-asian` | `east-asian-empirical.keras` | 0.973326921 | `east-asian-fine-tuned.keras` |
 
 The empirical defaults follow the prediction notebook and reproduce the saved cohort scores. The fine-tuned models produce a different score distribution. Select one with `--checkpoint fine-tuned` to get scores only. Supply `--threshold VALUE` to generate calls at an explicitly chosen cutoff for either checkpoint.
 
 ```sh
-deep predict --population east-asian --checkpoint fine-tuned examples/toy_features.csv fine_tuned.csv
+deep predict --population east-asian --checkpoint fine-tuned toy_features.csv fine_tuned.csv
 ```
 
 ## Python
@@ -52,7 +62,7 @@ deep predict --population east-asian --checkpoint fine-tuned examples/toy_featur
 import pandas as pd
 from deep_introgression import Classifier
 
-windows = pd.read_csv("examples/toy_features.csv")
+windows = pd.read_csv("toy_features.csv")
 model = Classifier("oceanian")
 scores = model.predict(windows)
 print(windows[["chromosome", "window"]].join(scores))

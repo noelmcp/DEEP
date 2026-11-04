@@ -9,7 +9,7 @@ import pandas as pd
 ASSETS = Path(__file__).with_name("models")
 FEATURES = tuple(json.loads((ASSETS / "features.json").read_text(encoding="utf8")))
 ZERO_IF_ABSENT = {"human_singletons", "human_high_freq_sites"}
-POPULATIONS = {"oceanian": ("test", 0.976012647), "east-asian": ("tibetan_test", 0.973326921)}
+POPULATIONS = {"oceanian": 0.976012647, "east-asian": 0.973326921}
 CHECKPOINTS = ("empirical", "fine-tuned")
 
 
@@ -23,10 +23,8 @@ class Classifier:
             raise ValueError(f"Unknown checkpoint {checkpoint!r}. Choose from {CHECKPOINTS}.")
         if threshold is not None and not 0 <= threshold <= 1:
             raise ValueError("The threshold must be a finite number from 0 to 1.")
-        run, cutoff = POPULATIONS[population]
-        prefix = "pretrain_" if checkpoint == "empirical" else ""
-        self.filename = f"{prefix}{run}.keras"
-        self.threshold = cutoff if threshold is None and checkpoint == "empirical" else threshold
+        self.filename = f"{population}-{checkpoint}.keras"
+        self.threshold = POPULATIONS[population] if threshold is None and checkpoint == "empirical" else threshold
         scaler = json.loads((ASSETS / "scalers.json").read_text(encoding="utf8"))[population]
         self._mean = np.asarray(scaler["mean"], dtype=np.float64)
         self._scale = np.asarray(scaler["scale"], dtype=np.float64)

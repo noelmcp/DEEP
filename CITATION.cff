@@ -3,7 +3,7 @@ message: "Please cite the DEEP study when using these classifiers."
 title: "DEEP — Deep ancestry Estimation through Efficient Proxies"
 type: software
 license: MIT
-version: 0.1.0
+version: 0.1.1
 authors:
   - family-names: McAllister
     given-names: Noel
