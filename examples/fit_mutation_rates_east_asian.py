@@ -142,7 +142,7 @@ def _draw_uniform_or_scalar(x, rng: np.random.Generator) -> float:
 @dataclass(frozen=True)
 class ModelParams:
     """One candidate's rate scale and gamma-mixture parameters.
-    
+
     mu0 is a per-base, per-generation rate. The base multiplier is Gamma(k_base,
     1/k_base); the hotspot multiplier is Gamma(k_hot, hot_mean/k_hot). p_hot is
     the probability of selecting the hotspot component for a window."""
@@ -155,7 +155,7 @@ class ModelParams:
 
 def draw_window_mu(rng: np.random.Generator, params: ModelParams) -> float:
     """Draw one window's rate from the base/hotspot gamma mixture.
-    
+
     Before optional background multipliers, the expected rate is
     mu0 * ((1 - p_hot) + p_hot * hot_mean)."""
     k_base = max(float(params.k_base), 1e-12)
@@ -176,7 +176,7 @@ def draw_window_mu(rng: np.random.Generator, params: ModelParams) -> float:
 
 def get_background_profiles(base_background_bottleneck_mode: str = "severe") -> Dict[str, Dict]:
     """Return the East Asian demographic and site-retention profiles.
-    
+
     base_background_bottleneck_mode controls the base_background profile and
     defaults to severe. Other profiles set their own modes. Ghost introgression
     is configured separately by --low_ghost and --high_ghost."""
@@ -354,7 +354,7 @@ def build_demography_and_samples(
     rng: np.random.Generator,
 ) -> Tuple["msprime.Demography", List["msprime.SampleSet"], float]:
     """Build the demographic history and sample the oversampled EAS panel.
-    
+
     Event times are generations before the present. SampleSet sizes are diploid
     individuals because simulate_one_processed_count uses ploidy=2. One ancient
     Denisovan diploid is sampled after the human panel in the sample list."""
@@ -432,7 +432,7 @@ def apply_human_poly_callable_profile(
     n_den_haps: int = 2,
 ) -> Tuple[np.ndarray, np.ndarray, int]:
     """Retain sites probabilistically under an optional callability profile.
-    
+
     Classify each row using the oversampled humans and the final Denisovan columns.
     Human-polymorphic, shared, Denisovan-only, and human-fixed-alternate sites can
     have different retention probabilities. Without this profile, keep all rows.
@@ -482,7 +482,7 @@ def remove_oversample_eas_singletons(
     singleton_mode: str = "derived",
 ) -> Tuple[np.ndarray, np.ndarray, int]:
     """Remove sites with human minor-allele count 1 in the oversampled panel.
-    
+
     Pass singleton_mode='minor', as main() does explicitly. The function's
     standalone default 'derived' is unsupported by its validation. The Denisovan
     alleles do not contribute to the human singleton count."""
@@ -510,7 +510,7 @@ def downsample_eas_diploid_pairs(
     n_den_haps: int = 2,
 ) -> np.ndarray:
     """Choose whole EAS diploids without replacement and retain the Denisovan.
-    
+
     Adjacent human haplotypes belong to the same individual. Keep each selected
     pair together, append the two Denisovan alleles, and prepend site positions.
     Seven humans and one Denisovan therefore produce a 17-column matrix."""
@@ -539,7 +539,7 @@ def downsample_eas_diploid_pairs(
 
 def count_processed_sites_like_training_stats(genotype_matrix_with_positions: np.ndarray, n_den_haps: int = 2) -> int:
     """Count sites polymorphic in the final human panel.
-    
+
     Column 0 contains positions, followed by paired human haplotypes and the last
     n_den_haps Denisovan columns. Fold alleles across all retained samples, then
     count rows containing both alleles among the humans. This corresponds to
@@ -571,7 +571,7 @@ def simulate_one_processed_count(
     args: argparse.Namespace,
 ) -> Tuple[int, Dict]:
     """Simulate and filter one window, returning its human site count and diagnostics.
-    
+
     The order is ancestry, mutations, optional callability retention, oversampled
     human singleton removal, whole-diploid downsampling, and human-polymorphic site
     counting. Ghost introgression follows args.low_ghost and args.high_ghost."""
@@ -659,7 +659,7 @@ def simulate_counts_for_params(
     seed: int,
 ) -> Tuple[np.ndarray, Dict]:
     """Collect n_reps successful window simulations for one candidate.
-    
+
     Zero-site windows are included. Retry failed simulations up to the attempt
     limit, or stop at the first error with --fail_fast. Report failure counts,
     removed sites, and mean mutation rate alongside the simulated counts."""
@@ -733,7 +733,7 @@ def quantile_grid_loss(
     w_quantiles: float,
 ) -> Tuple[float, Dict]:
     """Compare simulated and empirical quantiles with relative squared error.
-    
+
     Keep unique probabilities strictly between 0 and 1. Normalize the quantile
     weights to mean 1; tail_power controls their distribution across the chosen
     probabilities. A nonpositive w_quantiles disables this component."""
@@ -777,7 +777,7 @@ def compute_loss(
     args: argparse.Namespace,
 ) -> Tuple[float, Dict]:
     """Sum weighted moment, named-quantile, exceedance, and quantile-grid losses.
-    
+
     When an empirical exceedance probability is below min_exceed_prob, use the
     squared simulated probability to avoid dividing by a near-zero target."""
     loss = 0.0
