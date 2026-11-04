@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "Please cite the DEEP study when using these classifiers."
+title: "DEEP — Deep ancestry Estimation through Efficient Proxies"
+type: software
+license: MIT
+version: 0.1.0
+authors:
+  - family-names: McAllister
+    given-names: Noel
+preferred-citation:
+  type: article
+  title: "Scalable ARG-free Detection of Denisovan-mediated Superarchaic Introgression Reveals Heterogeneous Patterns across Populations"
+  authors:
+    - family-names: McAllister
+      given-names: Noel
+    - family-names: Zöllner
+      given-names: Sebastian
+    - family-names: Zhang
+      given-names: Xinjun
+  journal: bioRxiv
+  year: 2026
+  doi: 10.64898/2026.06.25.734355

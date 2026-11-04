@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deep-introgression"
+version = "0.1.0"
+description = "DEEP classifiers for Denisovan-mediated superarchaic introgression"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10,<3.13"
+dependencies = ["numpy>=1.26,<2.2", "pandas>=2,<3", "scipy>=1.11,<2", "tensorflow>=2.19,<2.21"]
+
+[project.optional-dependencies]
+vcf = ["cyvcf2>=0.31,<0.33"]
+
+[project.scripts]
+deep = "deep_introgression.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = false
+
+[tool.setuptools.package-data]
+deep_introgression = ["models/*.json", "models/*.keras"]
